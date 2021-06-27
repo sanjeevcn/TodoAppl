@@ -5,6 +5,11 @@ let sanitizeHTML = require('sanitize-html')
 let app = express()
 let db
 
+let port = process.env.PORT
+if (port == null || post == "") {
+  port = 3000
+}
+
 app.use(express.static('public'))
 
 let connectionUrl = 'mongodb+srv://admUser:admPass@cluster0.11920.mongodb.net/TodoApp?retryWrites=true&w=majority'
@@ -14,7 +19,7 @@ mongodb.connect(connectionUrl, {
   useUnifiedTopology: true
 }, function(err, client) {
   db = client.db()
-  app.listen(3000)
+  app.listen(port)
 })
 
 app.use(express.json())
