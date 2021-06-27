@@ -27,7 +27,6 @@ app.use(express.urlencoded({
 
 function passwordProtected(req, res, next) {
   res.set('WWW-Authenticate', 'Basic realm="example"');
-  // console.log(req.headers.authorization)
   if (req.headers.authorization == "Basic c2FuamVldjoxMjM0NQ==") {
     next()
   } else {
@@ -68,7 +67,6 @@ app.get('/', function(req, res) {
 
   <script>
   let items = ${JSON.stringify(items)}
-
   </script>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -79,35 +77,35 @@ app.get('/', function(req, res) {
 })
 
 app.post('/create-item', function(req, res) {
-  let safeText = sanitizeHTML(req.body.text, {
-    allowedTags: [],
-    allowedAttributes: {}
-  })
-  db.collection('Items').insertOne({
-    text: safeText
-  }, function(err, info) {
-    // res.redirect('/')
-    // res.send("Success")
-    res.json(info.ops[0])
-  })
+  if (req.body.text.length > 5) {
+    let safeText = sanitizeHTML(req.body.text, {
+      allowedTags: [],
+      allowedAttributes: {}
+    })
+    db.collection('Items').insertOne({
+      text: safeText
+    }, function(err, info) {
+      res.json(info.ops[0])
+    })
+  }
 })
 
 app.post('/update-item', function(req, res) {
-  let safeText = sanitizeHTML(req.body.text, {
-    allowedTags: [],
-    allowedAttributes: {}
-  })
-  db.collection('Items').findOneAndUpdate({
-    _id: new mongodb.ObjectId(req.body.id)
-  }, {
-    $set: {
-      text: safeText
-    }
-  }, function() {
-    res.send("Success")
-  })
-  // console.log(req.body.text)
-  // res.send("Success")
+  if (req.body.text.length > 5) {
+    let safeText = sanitizeHTML(req.body.text, {
+      allowedTags: [],
+      allowedAttributes: {}
+    })
+    db.collection('Items').findOneAndUpdate({
+      _id: new mongodb.ObjectId(req.body.id)
+    }, {
+      $set: {
+        text: safeText
+      }
+    }, function() {
+      res.send("Success")
+    })
+  }
 })
 
 app.post('/delete-item', function(req, res) {
@@ -116,6 +114,4 @@ app.post('/delete-item', function(req, res) {
   }, function() {
     res.send("Success")
   })
-  // console.log(req.body.text)
-  // res.send("Success")
 })
