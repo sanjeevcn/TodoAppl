@@ -35,7 +35,7 @@ function passwordProtected(req, res, next) {
 }
 
 app.get('/', function(req, res) {
-  db.collection('Items').find().toArray(function(err, items) {
+  db.collection('items').find().toArray(function(err, items) {
     // console.log(items)
 
     res.send(`<!DOCTYPE html>
@@ -82,7 +82,7 @@ app.post('/create-item', function(req, res) {
       allowedTags: [],
       allowedAttributes: {}
     })
-    db.collection('Items').insertOne({
+    db.collection('items').insertOne({
       text: safeText
     }, function(err, info) {
       res.json(info.ops[0])
@@ -96,7 +96,7 @@ app.post('/update-item', function(req, res) {
       allowedTags: [],
       allowedAttributes: {}
     })
-    db.collection('Items').findOneAndUpdate({
+    db.collection('items').findOneAndUpdate({
       _id: new mongodb.ObjectId(req.body.id)
     }, {
       $set: {
@@ -109,7 +109,7 @@ app.post('/update-item', function(req, res) {
 })
 
 app.post('/delete-item', function(req, res) {
-  db.collection('Items').deleteOne({
+  db.collection('items').deleteOne({
     _id: new mongodb.ObjectId(req.body.id)
   }, function() {
     res.send("Success")
